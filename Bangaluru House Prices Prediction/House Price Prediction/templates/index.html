@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Home | House Price Prediction</title>
+   <!-- <link rel="stylesheet" href="style.css"> -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.7.0/flowbite.min.css" rel="stylesheet" />
+   <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+
+
+<body>
+   <div class="w-screen h-screen flex bg-gray-700 justify-center items-center flex-col">
+      <div class="flex w-9/12 h-5/6 min-h-5/6 bg-white flex-col rounded-lg">
+         <div class="h-20 min-h-20 w-full flex bg-gray-300 items-center justify-center rounded-lg">
+            <h1 class="text-4xl text-blue-600 font-semibold bg-gray-300">Welcome to Bangalore House Price Predictor</h1>
+         </div>
+         <br>
+         <form id="myForm" method="post" onsubmit="function hello(event){
+            event.preventDefault()
+         }">
+            <div class="flex gap-20 px-10 py-5 gap-2">
+               <div class="flex-1">
+                  <h1>Choose a Location</h1>
+                  <select id="location" name="location" required
+                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg placeholder-gray-400   focus:ring-blue-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                     style="background-color:  #D3D3D3; color:black">
+                     <option selected>Choose a Location</option>
+                     {% for location in locations %}
+                     <option value="{{ location}}">{{location}}</option>
+                     {% endfor %}
+
+                  </select>
+               </div>
+               <div class="flex-1">
+                  <h2 class="">BHK</h2>
+                  <input type="number" id="bhk"
+                     class="bg-white border border-gray-300 text-red-900 text-sm rounded-lg focus:ring-blue-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                     placeholder="BHK" required style="background-color: #D3D3D3; color: black;" name="bhk"
+                     type="number">
+               </div>
+            </div>
+            <div class="flex gap-20 px-10 py-5">
+               <div class="flex-1">
+                  <h2 class="">Bathroom</h2>
+                  <input type="number" id="bath"
+                     class="bg-white border border-gray-300 text-red-900 text-sm rounded-lg focus:ring-blue-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                     placeholder="Bathroom" required style="background-color: #D3D3D3; color: black;" name="bath"
+                     type=number>
+               </div>
+               <div class="flex-1">
+                  <h2 class="">Total Sqft (Value must be greater than 500)</h2>
+                  <input type="number" id="sqft"
+                     class="bg-white border border-gray-300 text-red-900 text-sm rounded-lg focus:ring-blue-500 focus:border-gray-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-gray-500 dark:focus:border-gray-500"
+                     placeholder="Total_Sqft" required style="background-color: #D3D3D3; color: black;" name="sqft"
+                     type="number">
+               </div>
+
+            </div>
+            <div class="w-full min-w-max flex justify-center mt-4">
+               <button type="submit" onclick="send_data"
+                  class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  style="width: 30%;">Predict</button>
+            </div>
+         </form>
+         <div class="w-full min-w-max flex justify-center text-xl"><span id="Predication"> </span>
+         </div>
+      </div>
+   </div>
+   <!-- <script src="../path/to/flowbite/dist/flowbite.min.js"></script> -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.7.0/flowbite.min.js"></script>
+   <script>
+
+      // function form_handler(event) {
+      //    event.preventDefault()
+      //    console.log(event.target.value)
+
+      // }
+      document.getElementById('myForm').addEventListener('submit', async function (event) {
+         event.preventDefault()
+         var bhk = document.getElementById('bhk')
+         var bath = document.getElementById('bath')
+         var location = document.getElementById('location')
+         var sqft = document.getElementById('sqft')
+         var xhr = new XMLHttpRequest()
+         fetch("/predict", {
+            method: "POST",
+            body: JSON.stringify({
+               location: location.value,
+               bath: bath.value,
+               bhk: bhk.value,
+               total_sqft: sqft.value
+            }),
+            headers: {
+               "Content-type": "application/json;"
+            }
+         })
+            .then((response) => response.json())
+            .then((json) => {
+               document.getElementById('Predication').innerHTML = `Predicated Price: ₹ ${json}`;
+            }).catch(error => document.getElementById('Predication').innerHTML = 'Some Went Wrong!...')
+         document.getElementById('Predication').innerHTML = "Wait Predicting Price!...."
+      })
+
+      function send_data() {
+         var fd = new FormData(document.getElementById('myForm'))
+         var xhr = new XMLHttpRequest()
+      }
+
+   </script>
+
+</body>
+
+
+</html>
