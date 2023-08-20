@@ -4,6 +4,7 @@ import os
 import pickle
 import numpy as np
 
+print(pickle.format_version)
 app = Flask(__name__)
 data=pd.read_csv('Cleaned_data.csv')
 pipe = pickle.load(open('RidgeModel.pkl', 'rb'))
